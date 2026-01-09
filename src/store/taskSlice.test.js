@@ -7,7 +7,6 @@ import taskReducer, {
   setSearchQuery,
   selectFilteredTasks,
 } from './taskSlice';
-import { mockApi } from '../services/mockApi';
 
 // Mock the API
 jest.mock('../services/mockApi');

@@ -22,7 +22,7 @@ export default function TaskInput() {
     try {
       await dispatch(addTask({ title: taskTitle.trim() })).unwrap();
       setTaskTitle('');
-    } catch (err) {
+    } catch {
       setError('Failed to add task. Please try again.');
     }
   };

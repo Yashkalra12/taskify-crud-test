@@ -23,7 +23,7 @@ export default function TaskList({ tasks }) {
       await dispatch(updateTask({ id, updates: { title: editTitle.trim() } })).unwrap();
       setEditingId(null);
       setEditTitle('');
-    } catch (err) {
+    } catch {
       alert('Failed to update task');
     }
   };
@@ -37,7 +37,7 @@ export default function TaskList({ tasks }) {
     const newStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
     try {
       await dispatch(updateTask({ id: task.id, updates: { status: newStatus } })).unwrap();
-    } catch (err) {
+    } catch {
       alert('Failed to update task status');
     }
   };
@@ -46,7 +46,7 @@ export default function TaskList({ tasks }) {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
         await dispatch(deleteTask(id)).unwrap();
-      } catch (err) {
+      } catch {
         alert('Failed to delete task');
       }
     }
