@@ -1,46 +1,158 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
+  /* Dark Theme Colors */
   --color-neon-primary: #00f3ff;
   --color-neon-secondary: #bc13fe;
   --color-neon-accent: #fe0222;
 
-  --color-dark-bg: #050505;
-  --color-dark-surface: #0a0a10;
-  --color-dark-card: #12121a;
+  --color-dark-bg: #0a0a0f;
+  --color-dark-surface: #1a1a24;
+  --color-dark-card: #252535;
 
-  --font-orbitron: 'Orbitron', sans-serif;
-  --font-rajdhani: 'Rajdhani', sans-serif;
+  /* Light Theme Colors */
+  --color-light-bg: #f8fafc;
+  --color-light-surface: #ffffff;
+  --color-light-card: #f1f5f9;
 
-  --shadow-neon-blue: 0 0 5px #00f3ff, 0 0 10px #00f3ff;
-  --shadow-neon-purple: 0 0 5px #bc13fe, 0 0 10px #bc13fe;
+  --font-inter: 'Inter', sans-serif;
+
+  --shadow-neon-blue: 0 0 5px #00f3ff, 0 0 10px #00f3ff, 0 0 15px #00f3ff;
+  --shadow-neon-purple: 0 0 5px #bc13fe, 0 0 10px #bc13fe, 0 0 15px #bc13fe;
+}
+
+/* Define custom color utilities for Tailwind */
+@layer utilities {
+  .bg-dark-bg {
+    background-color: var(--color-dark-bg);
+  }
+  .bg-dark-surface {
+    background-color: var(--color-dark-surface);
+  }
+  .bg-dark-card {
+    background-color: var(--color-dark-card);
+  }
+  .bg-light-bg {
+    background-color: var(--color-light-bg);
+  }
+  .bg-light-surface {
+    background-color: var(--color-light-surface);
+  }
+  .bg-light-card {
+    background-color: var(--color-light-card);
+  }
+  .text-neon-primary {
+    color: var(--color-neon-primary);
+  }
+  .text-neon-secondary {
+    color: var(--color-neon-secondary);
+  }
+  .border-neon-primary {
+    border-color: var(--color-neon-primary);
+  }
+  .border-neon-secondary {
+    border-color: var(--color-neon-secondary);
+  }
+  .shadow-neon-blue {
+    box-shadow: var(--shadow-neon-blue);
+  }
+  .shadow-neon-purple {
+    box-shadow: var(--shadow-neon-purple);
+  }
 }
 
 @layer base {
+  * {
+    @apply font-inter;
+  }
+
   body {
-    @apply bg-dark-bg text-white font-rajdhani overflow-x-hidden;
+    @apply text-gray-900 overflow-x-hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Dark Theme */
+  [data-theme="dark"] body {
+    @apply bg-dark-bg text-white;
     background-image:
-      radial-gradient(circle at 15% 50%, rgba(188, 19, 254, 0.1) 0%, transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(0, 243, 255, 0.1) 0%, transparent 25%);
+      radial-gradient(circle at 15% 50%, rgba(188, 19, 254, 0.08) 0%, transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(0, 243, 255, 0.08) 0%, transparent 25%);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] body {
+    @apply bg-light-bg text-gray-900;
   }
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-dark-card/60 backdrop-blur-md border border-white/10 rounded-xl shadow-xl;
+  /* Glass Card Effect (Dark Theme) */
+  [data-theme="dark"] .glass-card {
+    @apply bg-dark-card/80 backdrop-blur-md border border-white/10 rounded-xl shadow-xl;
   }
 
-  .btn-neon {
-    @apply px-6 py-2 rounded-lg font-orbitron font-bold transition-all duration-300 transform hover:scale-105 active:scale-95;
+  /* Neon Button (Dark Theme) */
+  [data-theme="dark"] .btn-neon {
+    @apply px-6 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95;
     background: linear-gradient(45deg, transparent 5%, #00f3ff 5%);
     color: #000;
     box-shadow: 6px 0px 0px #00f3ff;
   }
 
-  .btn-neon:hover {
+  [data-theme="dark"] .btn-neon:hover {
     background: linear-gradient(45deg, transparent 5%, #bc13fe 5%);
     box-shadow: 6px 0px 0px #bc13fe;
     color: #fff;
+  }
+
+  /* Smooth Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 640px) {
+  .glass-card {
+    @apply p-4;
   }
 }
