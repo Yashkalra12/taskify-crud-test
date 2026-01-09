@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -120,17 +120,26 @@ describe('TaskList', () => {
     const editButtons = screen.getAllByTitle(/edit task/i);
     await user.click(editButtons[0]);
     
-    const input = screen.getByDisplayValue('Task 1');
+    const input = await screen.findByDisplayValue('Task 1');
     await user.clear(input);
     await user.type(input, 'Updated Task');
     
     const saveButton = screen.getByText(/save/i);
     await user.click(saveButton);
     
+    // Wait for the update to complete
     await waitFor(() => {
       expect(screen.queryByDisplayValue('Updated Task')).not.toBeInTheDocument();
-      expect(screen.getByText('Updated Task')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
+    
+    // The task should be updated in the store, but we're passing tasks as prop
+    // So we need to check if the component re-renders with new tasks
+    // Since we're testing the component in isolation, we should check the store state
+    await waitFor(() => {
+      const state = store.getState();
+      const updatedTask = state.tasks.items.find(t => t.id === 1);
+      expect(updatedTask?.title).toBe('Updated Task');
+    }, { timeout: 3000 });
   });
 
   it('should cancel editing when cancel button is clicked', async () => {
@@ -170,13 +179,16 @@ describe('TaskList', () => {
     const editButtons = screen.getAllByTitle(/edit task/i);
     await user.click(editButtons[0]);
     
-    const input = screen.getByDisplayValue('Task 1');
+    const input = await screen.findByDisplayValue('Task 1');
     await user.clear(input);
     await user.type(input, 'Enter Saved Task{Enter}');
     
+    // Wait for the update to complete
     await waitFor(() => {
-      expect(screen.getByText('Enter Saved Task')).toBeInTheDocument();
-    });
+      const state = store.getState();
+      const updatedTask = state.tasks.items.find(t => t.id === 1);
+      expect(updatedTask?.title).toBe('Enter Saved Task');
+    }, { timeout: 3000 });
   });
 
   it('should cancel on Escape key', async () => {

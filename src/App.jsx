@@ -17,7 +17,10 @@ function App() {
 
   useEffect(() => {
     // Fetch tasks on component mount
-    dispatch(fetchTasks());
+    const loadTasks = async () => {
+      await dispatch(fetchTasks());
+    };
+    loadTasks();
   }, [dispatch]);
 
   return (
