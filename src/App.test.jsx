@@ -16,7 +16,12 @@ const mockFetchTasks = jest.fn(() => Promise.resolve({
 
 jest.mock('./services/mockApi', () => ({
   mockApi: {
-    fetchTasks: mockFetchTasks,
+    fetchTasks: jest.fn(() => Promise.resolve({
+      data: [
+        { id: 1, title: 'Task 1', status: 'Pending', createdAt: Date.now() },
+        { id: 2, title: 'Task 2', status: 'Completed', createdAt: Date.now() },
+      ],
+    })),
     addTask: jest.fn((taskData) => Promise.resolve({
       data: { id: 3, title: taskData.title, status: 'Pending', createdAt: Date.now() },
     })),
@@ -50,13 +55,6 @@ describe('App Integration', () => {
   beforeEach(() => {
     localStorage.clear();
     jest.clearAllMocks();
-    // Reset mock to return resolved promise immediately
-    mockFetchTasks.mockResolvedValue({
-      data: [
-        { id: 1, title: 'Task 1', status: 'Pending', createdAt: Date.now() },
-        { id: 2, title: 'Task 2', status: 'Completed', createdAt: Date.now() },
-      ],
-    });
   });
 
   it('should render app with header', async () => {
